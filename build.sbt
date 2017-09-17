@@ -8,7 +8,7 @@ lazy val root = (project in file(".")).settings(
 
 lazy val commonSettings = Seq(
   name := "playground",
-  scalaVersion := "2.12.1",
+  scalaVersion := "2.11.11",
   crossScalaVersions := Seq("2.11.11", "2.12.1")
 )
 
