@@ -8,4 +8,11 @@ object Playground {
   def stdOut[F[_], I](implicit F: Sync[F]): Sink[F, I] =
     _.evalMap(e => F.delay(Console.out.println(e)))
 
+  implicit class Runner[A](s: Stream[IO, A]) {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    def yolo: Unit = s.run.unsafeRunSync
+    def yoloV: Vector[A] = s.runLog.unsafeRunSync
+  }
 }
+
