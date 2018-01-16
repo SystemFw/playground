@@ -44,23 +44,28 @@ def dep(org: String)(version: String)(modules: String*) =
 lazy val dependencies = {
   val scalaz = dep("org.scalaz")("7.2.8")("scalaz-core")
 
-  val cats = dep("org.typelevel")("1.0.0-MF")(
+  val cats = dep("org.typelevel")("1.0.1")(
     "cats-core",
     "cats-macros",
     "cats-kernel",
     "cats-free"
   )
 
-  val fs2 = dep("co.fs2")("0.10.0-M6")(
+  val fs2 = dep("co.fs2")("0.10.0-M11")(
     "fs2-core",
     "fs2-io"
   )
 
+  val http4s = dep("org.http4s")("0.18.0-SNAPSHOT")(
+    "http4s-dsl",
+    "http4s-blaze-server",
+    "http4s-blaze-client"
+  )
+
   val mixed = Seq(
-    "com.github.benhutchison" %% "mouse" % "0.10-MF",
-    "org.typelevel" %% "cats-effect" % "0.4",
-    "org.typelevel" %% "kittens" % "1.0.0-M11",
-    "com.chuusai" %% "shapeless" % "2.3.3-SNAPSHOT"
+    "org.typelevel" %% "mouse" % "0.16",
+    "org.typelevel" %% "kittens" % "1.0.0-RC2",
+    "com.chuusai" %% "shapeless" % "2.3.3"
   )
 
   def extraResolvers =
@@ -73,6 +78,7 @@ lazy val dependencies = {
     libraryDependencies ++= Seq(
       cats,
       fs2,
+      http4s,
       scalaz,
       mixed
     ).flatten

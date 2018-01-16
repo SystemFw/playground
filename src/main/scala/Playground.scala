@@ -11,8 +11,13 @@ object Playground {
   implicit class Runner[A](s: Stream[IO, A]) {
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    def yolo: Unit = s.run.unsafeRunSync
-    def yoloV: Vector[A] = s.runLog.unsafeRunSync
+    def yolo: Unit = s.compile.drain.unsafeRunSync
+    def yoloV: Vector[A] = s.compile.toVector.unsafeRunSync
   }
+
+  import scala.concurrent.ExecutionContext.Implicits.global
 }
+
+
+
 
