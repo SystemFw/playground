@@ -59,7 +59,13 @@ lazy val dependencies = {
   val http4s = dep("org.http4s")("0.18.0-SNAPSHOT")(
     "http4s-dsl",
     "http4s-blaze-server",
-    "http4s-blaze-client"
+    "http4s-blaze-client",
+    "http4s-circe"
+  )
+
+  val circe = dep("io.circe")("0.9.0")(
+    "circe-generic",
+    "circe-literal"
   )
 
   val mixed = Seq(
@@ -79,6 +85,7 @@ lazy val dependencies = {
       cats,
       fs2,
       http4s,
+      circe,
       scalaz,
       mixed
     ).flatten
