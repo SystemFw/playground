@@ -44,26 +44,27 @@ def dep(org: String)(version: String)(modules: String*) =
 lazy val dependencies = {
   val scalaz = dep("org.scalaz")("7.2.8")("scalaz-core")
 
-  val cats = dep("org.typelevel")("1.0.1")(
+  val cats = dep("org.typelevel")("1.1.0")(
     "cats-core",
     "cats-macros",
     "cats-kernel",
     "cats-free"
   )
 
-  val fs2 = dep("co.fs2")("0.10.0-M11")(
+  val fs2 = dep("co.fs2")("0.10.3")(
     "fs2-core",
     "fs2-io"
   )
 
-  val http4s = dep("org.http4s")("0.18.0-SNAPSHOT")(
+  val http4s = dep("org.http4s")("0.18.8")(
     "http4s-dsl",
     "http4s-blaze-server",
     "http4s-blaze-client",
-    "http4s-circe"
+    "http4s-circe",
+    "http4s-scala-xml"
   )
 
-  val circe = dep("io.circe")("0.9.0")(
+  val circe = dep("io.circe")("0.9.3")(
     "circe-generic",
     "circe-literal"
   )
