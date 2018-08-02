@@ -51,7 +51,7 @@ lazy val dependencies = {
     "cats-free"
   )
 
-  val fs2 = dep("co.fs2")("0.10.3")(
+  val fs2 = dep("co.fs2")("1.0.0-M3")(
     "fs2-core",
     "fs2-io"
   )

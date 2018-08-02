@@ -10,5 +10,16 @@ object Playground {
     def yoloV: Vector[A] = s.compile.toVector.unsafeRunSync
   }
 
+  def put[A](a: A): IO[Unit] = IO(println(a))
+
+
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  def yo =
+    Stream
+      .repeatEval(put("hello"))
+      .interruptWhen(Timer[IO].sleep(2.seconds).attempt)
+      .yolo
 
 }
