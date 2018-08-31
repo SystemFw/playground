@@ -42,21 +42,12 @@ def dep(org: String)(version: String)(modules: String*) =
   }
 
 lazy val dependencies = {
-  val scalaz = dep("org.scalaz")("7.2.8")("scalaz-core")
-
-  val cats = dep("org.typelevel")("1.1.0")(
-    "cats-core",
-    "cats-macros",
-    "cats-kernel",
-    "cats-free"
-  )
-
-  val fs2 = dep("co.fs2")("1.0.0-M3")(
+  val fs2 = dep("co.fs2")("1.0.0-M4")(
     "fs2-core",
     "fs2-io"
   )
 
-  val http4s = dep("org.http4s")("0.18.8")(
+  val http4s = dep("org.http4s")("0.19.0-M1")(
     "http4s-dsl",
     "http4s-blaze-server",
     "http4s-blaze-client",
@@ -83,11 +74,9 @@ lazy val dependencies = {
 
   val deps =
     libraryDependencies ++= Seq(
-      cats,
       fs2,
       http4s,
       circe,
-      scalaz,
       mixed
     ).flatten
 
