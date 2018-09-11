@@ -57,7 +57,8 @@ lazy val dependencies = {
 
   val circe = dep("io.circe")("0.9.3")(
     "circe-generic",
-    "circe-literal"
+    "circe-literal",
+    "circe-parser"
   )
 
   val mixed = Seq(
@@ -82,3 +83,4 @@ lazy val dependencies = {
 
   Seq(deps, extraResolvers)
 }
+
