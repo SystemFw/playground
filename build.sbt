@@ -42,7 +42,7 @@ def dep(org: String)(version: String)(modules: String*) =
   }
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2")("1.0.0-RC1")(
+  val fs2 = dep("co.fs2")("1.0.0-RC2")(
     "fs2-core",
     "fs2-io"
   )
