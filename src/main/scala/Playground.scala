@@ -18,7 +18,7 @@ object Playground extends IOApp {
   def yo =
     Stream
       .repeatEval(put("hello"))
-      .interruptWhen(timer.sleep(2.seconds).attempt)
+      .interruptWhen(Stream.sleep(2.seconds) as true)
       .yolo
 
 
