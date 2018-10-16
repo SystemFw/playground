@@ -83,4 +83,3 @@ lazy val dependencies = {
 
   Seq(deps, extraResolvers)
 }
-

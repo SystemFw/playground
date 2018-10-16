@@ -18,13 +18,6 @@ object Playground extends IOApp {
   def yo =
     Stream
       .repeatEval(put("hello"))
-      .interruptWhen(Stream.sleep(2.seconds) as true)
+      .interruptAfter(2.seconds)
       .yolo
-
-
-  def s = Stream(IO.unit).concurrently {
-    Stream.fixedRate[IO](100.milliseconds).evalMap(_ => IO (println("invoked")))
-  }.yoloV
-
-
 }
