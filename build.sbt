@@ -63,7 +63,7 @@ lazy val dependencies = {
 
   val mixed = Seq(
     "org.typelevel" %% "mouse" % "0.16",
-    "org.typelevel" %% "kittens" % "1.0.0-RC2",
+    "org.typelevel" %% "kittens" % "1.2.0",
     "com.chuusai" %% "shapeless" % "2.3.3"
   )
 
