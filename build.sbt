@@ -42,12 +42,12 @@ def dep(org: String)(version: String)(modules: String*) =
   }
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2")("1.0.0")(
+  val fs2 = dep("co.fs2")("1.0.2")(
     "fs2-core",
     "fs2-io"
   )
 
-  val http4s = dep("org.http4s")("0.19.0")(
+  val http4s = dep("org.http4s")("0.20.0-M4")(
     "http4s-dsl",
     "http4s-blaze-server",
     "http4s-blaze-client",
@@ -55,14 +55,14 @@ lazy val dependencies = {
     "http4s-scala-xml"
   )
 
-  val circe = dep("io.circe")("0.10.0")(
+  val circe = dep("io.circe")("0.11.0")(
     "circe-generic",
     "circe-literal",
     "circe-parser"
   )
 
   val mixed = Seq(
-    "org.typelevel" %% "mouse" % "0.16",
+    "org.typelevel" %% "mouse" % "0.20",
     "org.typelevel" %% "kittens" % "1.2.0",
     "com.chuusai" %% "shapeless" % "2.3.3"
   )
