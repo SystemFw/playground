@@ -8,8 +8,7 @@ lazy val root = (project in file(".")).settings(
 
 lazy val commonSettings = Seq(
   name := "playground",
-  scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.5")
+  scalaVersion := "2.12.6"
 )
 
 lazy val consoleSettings = Seq(
@@ -47,7 +46,7 @@ lazy val dependencies = {
     "fs2-io"
   )
 
-  val http4s = dep("org.http4s")("0.20.0-M4")(
+  val http4s = dep("org.http4s")("0.20.0-RC1")(
     "http4s-dsl",
     "http4s-blaze-server",
     "http4s-blaze-client",
