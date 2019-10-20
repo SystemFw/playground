@@ -41,12 +41,12 @@ def dep(org: String)(version: String)(modules: String*) =
   }
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2")("1.1.0-M2")(
+  val fs2 = dep("co.fs2")("2.0.1")(
     "fs2-core",
     "fs2-io"
   )
 
-  val http4s = dep("org.http4s")("0.20.0")(
+  val http4s = dep("org.http4s")("0.21.0-M5")(
     "http4s-dsl",
     "http4s-blaze-server",
     "http4s-blaze-client",
