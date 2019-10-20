@@ -1,63 +1,35 @@
 lazy val root = (project in file(".")).settings(
-  commonSettings,
-  consoleSettings,
-  compilerOptions,
-  typeSystemEnhancements,
-  dependencies
-)
-
-lazy val commonSettings = Seq(
-  name := "playground",
-  scalaVersion := "2.12.6"
-)
-
-lazy val consoleSettings = Seq(
+    name := "playground",
+  scalaVersion := "2.12.8",
+  scalafmtOnCompile := true,
+  scalacOptions -= "-Xfatal-warnings", // enable all options from sbt-tpolecat except fatal warnings
+  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
   initialCommands := s"import Playground._",
-  scalacOptions in (Compile, console) -= "-Ywarn-unused-import"
+  resolvers ++= Seq(
+    Resolver.sonatypeRepo("releases"),
+    Resolver.sonatypeRepo("snapshots"),
+  ),
+  libraryDependencies ++= dependencies
 )
 
-lazy val compilerOptions =
-  scalacOptions ++= Seq(
-    "-unchecked",
-    "-deprecation",
-    "-encoding",
-    "utf8",
-    "-target:jvm-1.8",
-    "-feature",
-    "-language:implicitConversions",
-    "-language:higherKinds",
-    "-language:existentials",
-    "-Ypartial-unification",
-    "-Ywarn-unused-import",
-    "-Ywarn-value-discard"
-  )
-
-lazy val typeSystemEnhancements =
-  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
-
-def dep(org: String)(version: String)(modules: String*) =
-  Seq(modules: _*) map { name =>
-    org %% name % version
-  }
+def dep(org: String, prefix: String, version: String)(modules: String*) =
+  modules.map(m => org %% (prefix ++ m) % version)
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2")("2.0.1")(
-    "fs2-core",
-    "fs2-io"
+  val fs2 = dep("co.fs2", "fs2-", "2.0.1")("core", "io")
+
+  val http4s = dep("org.http4s", "http4s-", "0.21.0-M5")(
+    "dsl",
+    "blaze-server",
+    "blaze-client",
+    "circe",
+    "scala-xml"
   )
 
-  val http4s = dep("org.http4s")("0.21.0-M5")(
-    "http4s-dsl",
-    "http4s-blaze-server",
-    "http4s-blaze-client",
-    "http4s-circe",
-    "http4s-scala-xml"
-  )
-
-  val circe = dep("io.circe")("0.11.0")(
-    "circe-generic",
-    "circe-literal",
-    "circe-parser"
+  val circe = dep("io.circe", "circe-", "0.11.0")(
+    "generic",
+    "literal",
+    "parser"
   )
 
   val mixed = Seq(
@@ -66,19 +38,5 @@ lazy val dependencies = {
     "com.chuusai" %% "shapeless" % "2.3.3"
   )
 
-  def extraResolvers =
-    resolvers ++= Seq(
-      Resolver.sonatypeRepo("releases"),
-      Resolver.sonatypeRepo("snapshots")
-    )
-
-  val deps =
-    libraryDependencies ++= Seq(
-      fs2,
-      http4s,
-      circe,
-      mixed
-    ).flatten
-
-  Seq(deps, extraResolvers)
+  fs2 ++ http4s ++ circe ++ mixed
 }
