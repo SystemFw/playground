@@ -2,6 +2,7 @@ import cats._, implicits._
 import cats.effect._, concurrent._
 import cats.effect.implicits._
 import fs2._
+import fs2.concurrent._
 import scala.concurrent.duration._
 
 object Playground extends IOApp {
@@ -20,93 +21,56 @@ object Playground extends IOApp {
       .interruptAfter(2.seconds)
       .yolo
 
-  def a = Resource.make(put("open 1"))(_ => put("close 1"))
-  def b = Resource.make(put("open 2"))(_ => put("close 2"))
-  def c =
-    Resource.make(IO.raiseError[Unit](new Exception))(_ => put("close 2"))
-  def d = (a >> b >> c).allocated.unsafeRunSync
+  // def race[F[_]: Concurrent, A](lhs: Stream[F, A], rhs : Stream[F, A]): Stream[F, A] =
+  //   Stream.eval(Deferred[F, Unit]).flatMap { stop =>
 
-  implicit class R[F[_], A](r: Resource[F, A]) {
-    import annotation.tailrec
+  //   }
 
-    import Resource._
+  def a =
+    List(1.some.pure[IO], 2.some.pure[IO])
+      .traverse(x => cats.data.Nested(x))
+      .value
 
-    def use[B](f: A => F[B])(implicit F: Bracket[F, Throwable]): F[B] = {
-      // Indirection for calling `loop` needed because `loop` must be @tailrec
-      def continue(current: Resource[F, Any],
-                   stack: List[Any => Resource[F, Any]]): F[Any] =
-        loop(current, stack)
+  def tt =
+    Stream
+      .sleep(1.second)
+      .mergeHaltL(Stream.sleep(20.seconds))
+      .onFinalize(put("finished"))
+      .yolo
+  def parZipPr = {
+    Stream
+      .eval(
+        // IO(scala.util.Random.nextInt(1000))
+        //   .flatMap(s =>
+        IO.sleep(1.second) >> put("a")
+      )
+      .mergeHaltBoth(
+        Stream.eval(
+          // IO(
+          //   scala.util.Random
+          //     .nextInt(1000)
+          // ).flatMap(s =>
+          IO.sleep(1.second) >> put("b") >> IO.never
+            .onCancel(put("interrupted"))
+        )
+      )
+  }.yolo
 
-      // Interpreter that knows how to evaluate a Resource data structure;
-      // Maintains its own stack for dealing with Bind chains
-      @tailrec
-      def loop(current: Resource[F, Any],
-               stack: List[Any => Resource[F, Any]]): F[Any] = {
-        current match {
-          case Allocate(resource) =>
-            F.bracketCase(resource) {
-              case (a, _) =>
-                stack match {
-                  case Nil => f.asInstanceOf[Any => F[Any]](a)
-                  case f0 :: xs => continue(f0(a), xs)
-                }
-            } {
-              case ((_, release), ec) =>
-                release(ec)
-            }
-          case Bind(source, f0) =>
-            loop(source, f0.asInstanceOf[Any => Resource[F, Any]] :: stack)
-          case Suspend(resource) =>
-            resource.flatMap(continue(_, stack))
-        }
-      }
-      loop(r.asInstanceOf[Resource[F, Any]], Nil).asInstanceOf[F[B]]
-    }
+  def e =
+    Stream
+      .iterate(0)(_ + 1)
+      .covary[IO]
+      .metered(500.millis)
+      .interruptAfter(4.seconds)
+      .noneTerminate
+      .evalMap(put)
+      .yolo
 
-    def allocated(implicit F: Bracket[F, Throwable]): F[(A, F[Unit])] = {
+  def ex =
+    Stream
+      .repeatEval(put("yo"))
+      .merge(Stream.repeatEval(put("lo")))
+      .interruptAfter(3.seconds)
+      .yolo
 
-      // Indirection for calling `loop` needed because `loop` must be @tailrec
-      def continue(current: Resource[F, Any],
-                   stack: List[Any => Resource[F, Any]],
-                   release: F[Unit]): F[(Any, F[Unit])] =
-        loop(current, stack, release)
-
-      // Interpreter that knows how to evaluate a Resource data structure;
-      // Maintains its own stack for dealing with Bind chains
-      @tailrec
-      def loop(current: Resource[F, Any],
-               stack: List[Any => Resource[F, Any]],
-               release: F[Unit]): F[(Any, F[Unit])] =
-        current match {
-          case Resource.Allocate(resource) =>
-            F.bracketCase(resource) {
-              case (a, rel) =>
-                stack match {
-                  case Nil =>
-                    F.pure(a -> F.guarantee(rel(ExitCase.Completed))(release))
-                  case f0 :: xs =>
-                    continue(f0(a),
-                             xs,
-                             F.guarantee(rel(ExitCase.Completed))(release))
-                }
-            } {
-              case (_, ExitCase.Completed) =>
-                F.unit
-              case ((_, release), ec) =>
-                release(ec)
-            }
-          case Resource.Bind(source, f0) =>
-            loop(source,
-                 f0.asInstanceOf[Any => Resource[F, Any]] :: stack,
-                 release)
-          case Resource.Suspend(resource) =>
-            resource.flatMap(continue(_, stack, release))
-        }
-
-      loop(r.asInstanceOf[Resource[F, Any]], Nil, F.unit).map {
-        case (a, release) =>
-          (a.asInstanceOf[A], release)
-      }
-    }
-  }
 }

@@ -1,5 +1,5 @@
 lazy val root = (project in file(".")).settings(
-    name := "playground",
+  name := "playground",
   scalaVersion := "2.12.8",
   scalafmtOnCompile := true,
   scalacOptions -= "-Xfatal-warnings", // enable all options from sbt-tpolecat except fatal warnings
@@ -16,9 +16,9 @@ def dep(org: String, prefix: String, version: String)(modules: String*) =
   modules.map(m => org %% (prefix ++ m) % version)
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2", "fs2-", "2.0.1")("core", "io")
+  val fs2 = dep("co.fs2", "fs2-", "2.2.2")("core", "io")
 
-  val http4s = dep("org.http4s", "http4s-", "0.21.0-M5")(
+  val http4s = dep("org.http4s", "http4s-", "0.21.0")(
     "dsl",
     "blaze-server",
     "blaze-client",
@@ -26,7 +26,7 @@ lazy val dependencies = {
     "scala-xml"
   )
 
-  val circe = dep("io.circe", "circe-", "0.11.0")(
+  val circe = dep("io.circe", "circe-", "0.13.0")(
     "generic",
     "literal",
     "parser"
