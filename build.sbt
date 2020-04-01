@@ -1,15 +1,16 @@
 lazy val root = (project in file(".")).settings(
   name := "playground",
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.1",
   scalafmtOnCompile := true,
   scalacOptions -= "-Xfatal-warnings", // enable all options from sbt-tpolecat except fatal warnings
-  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
   initialCommands := s"import Playground._",
   resolvers ++= Seq(
     Resolver.sonatypeRepo("releases"),
     Resolver.sonatypeRepo("snapshots"),
   ),
-  libraryDependencies ++= dependencies
+  libraryDependencies ++= dependencies,
+  libraryDependencies +=
+    compilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full),
 )
 
 def dep(org: String, prefix: String, version: String)(modules: String*) =
@@ -33,8 +34,8 @@ lazy val dependencies = {
   )
 
   val mixed = Seq(
-    "org.typelevel" %% "mouse" % "0.20",
-    "org.typelevel" %% "kittens" % "1.2.0",
+    "org.typelevel" %% "mouse" % "0.24",
+    "org.typelevel" %% "kittens" % "2.0.0",
     "com.chuusai" %% "shapeless" % "2.3.3"
   )
 
