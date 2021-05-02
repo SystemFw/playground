@@ -17,9 +17,9 @@ def dep(org: String, prefix: String, version: String)(modules: String*) =
   modules.map(m => org %% (prefix ++ m) % version)
 
 lazy val dependencies = {
-  val fs2 = dep("co.fs2", "fs2-", "2.2.2")("core", "io")
+  val fs2 = dep("co.fs2", "fs2-", "3.0.2")("core", "io")
 
-  val http4s = dep("org.http4s", "http4s-", "0.21.0")(
+  val http4s = dep("org.http4s", "http4s-", "1.0.0-M21")(
     "dsl",
     "blaze-server",
     "blaze-client",
@@ -34,9 +34,9 @@ lazy val dependencies = {
   )
 
   val mixed = Seq(
-    "org.typelevel" %% "mouse" % "0.24",
-    "org.typelevel" %% "kittens" % "2.0.0",
-    "com.chuusai" %% "shapeless" % "2.3.3"
+    "org.typelevel" %% "cats-free" % "2.1.0",
+    "org.typelevel" %% "kittens" % "2.2.2",
+    "com.chuusai" %% "shapeless" % "2.3.4"
   )
 
   fs2 ++ http4s ++ circe ++ mixed
