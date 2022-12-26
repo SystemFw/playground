@@ -1,7 +1,9 @@
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 lazy val root = (project in file(".")).settings(
   name := "playground",
   scalaVersion := "2.13.1",
-  scalafmtOnCompile := true,
+//  scalafmtOnCompile := true,
   scalacOptions -= "-Xfatal-warnings", // enable all options from sbt-tpolecat except fatal warnings
   initialCommands := s"import Playground._",
   resolvers ++= Seq(
