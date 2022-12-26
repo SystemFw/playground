@@ -6,6 +6,7 @@ import cats.effect.unsafe.implicits.global
 import fs2._
 import fs2.concurrent._
 import scala.concurrent.duration._
+import scala.util.chaining._
 
 object Playground {
 
@@ -19,4 +20,9 @@ object Playground {
       .repeatEval(IO.println("hello"))
       .interruptAfter(2.seconds)
       .yolo
+
+  val stream =
+    Stream.unfold(10)(s => Some((s, s + 10))).covary[IO].metered(500.millis)
+
+  def third = stream.take(3).compile.lastOrError.unsafeRunSync()
 }
