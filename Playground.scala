@@ -1,6 +1,3 @@
-//> using lib "org.typelevel::toolkit::0.1.0"
-//> using lib "org.typelevel::toolkit-test::0.1.0"
-
 import cats._, implicits._
 import cats.data._
 import cats.effect._, std._, concurrent._
